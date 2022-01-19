@@ -315,17 +315,18 @@ class Base(Configuration):
     # =========================================================================
     # Caching
     # =========================================================================
+    MEMCACHED_HOST = os.environ.get('MEMCACHED_HOST', "memcached")
     MEMCACHED_PORT = os.environ.get('MEMCACHED_PORT', 11211)
     CACHES = {
         'default': {
             # 'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
             'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
-            'LOCATION': 'memcached:{}'.format(MEMCACHED_PORT),
+            'LOCATION': '{}:{}'.format(MEMCACHED_HOST,MEMCACHED_PORT),
         }
     }
 
     # Store information for celery
-    CELERY_RESULT_BACKEND = 'cache+memcached://memcached:{}/'.format(MEMCACHED_PORT)
+    CELERY_RESULT_BACKEND = 'cache+memcached://{}:{}/'.format(MEMCACHED_HOST,MEMCACHED_PORT)
 
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 
