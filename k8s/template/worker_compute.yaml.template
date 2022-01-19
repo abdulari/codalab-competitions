@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workercompute-deployment
+  labels:
+    app: workercompute-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workercompute-deployment
+  template:
+    metadata:
+      labels:
+        app: workercompute-deployment
+    spec:
+      containers:
+      - name: workercompute-deployment
+        image: $K8S_WORKERCOMPUTE_IMAGE$
+        envFrom:
+          - configMapRef:
+              name: config

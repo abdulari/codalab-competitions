@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flower-deployment
+  labels:
+    app: flower-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flower-deployment
+  template:
+    metadata:
+      labels:
+        app: flower-deployment
+    spec:
+      containers:
+      - name: flower-deployment
+        image: localhost:5000/flower-codalab
+        ports:
+        - containerPort: 5555
+        envFrom:
+          - configMapRef:
+              name: config
+        env:
+          - name: service_port
+            value: "5555"
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flower
+  labels:
+    name: flower
+spec:
+  ports:
+    - port: 5555
+      protocol: TCP
+      name: server
+  selector:
+    app: flower-deployment
+  type: ClusterIP

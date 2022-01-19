@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memcached-deployment
+  labels:
+    app: memcached-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memcached-deployment
+  template:
+    metadata:
+      labels:
+        app: memcached-deployment
+    spec:
+      containers:
+      - name: memcached-deployment
+        image: $K8S_MEMCACHED_IMAGE$
+        ports:
+        - containerPort: 11211
+        envFrom:
+          - configMapRef:
+              name: config
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: memcached
+  labels:
+    name: memcached
+spec:
+  ports:
+    - port: 11211
+      protocol: TCP
+      name: server
+  selector:
+    app: memcached-deployment
+  type: ClusterIP

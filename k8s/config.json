@@ -1,0 +1,10 @@
+{
+    "K8S_NGINX_IMAGE": "localhost:5000/nginx-codalab",
+    "K8S_DJANGO_IMAGE": "localhost:5000/django-codalab",
+    "K8S_POSTGRES_IMAGE": "localhost:5000/postgres-codalab",
+    "K8S_RABBITMQ_IMAGE": "localhost:5000/rabbitmq-codalab",
+    "K8S_FLOWER_IMAGE": "localhost:5000/flower-codalab",
+    "K8S_MEMCACHED_IMAGE": "localhost:5000/memcached-codalab",
+    "K8S_WORKERCOMPUTE_IMAGE": "localhost:5000/workercompute-codalab"
+
+}
