@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workersite-deployment
+  labels:
+    app: workersite-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workersite-deployment
+  template:
+    metadata:
+      labels:
+        app: workersite-deployment
+    spec:
+      containers:
+      - name: workersite-deployment
+        image: localhost:5000/django-codalab
+        command: ["/app/docker/run_site.sh"]
+        ports:
+        - containerPort: 8000
+        envFrom:
+          - configMapRef:
+              name: config
+        env:
+          - name: DEBUG
+            value: "False"
+          - name: REQUESTS_CA_BUNDLE
+            value: "/usr/local/lib/python3.8/site-packages/certifi/cacert.pem"

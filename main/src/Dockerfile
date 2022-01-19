@@ -32,7 +32,17 @@ RUN npm install -g less
 RUN npm run build-css
 
 RUN pip install -r requirements/common.txt
+RUN python3 manage.py collectstatic --noinput
+RUN python3 manage.py migrate
+
+RUN apt install -y nginx gettext-base
 
 RUN apt-get -y autoclean
+
+COPY nginx /app/nginx
+
 COPY run_django.sh .
 RUN chmod +x run_django.sh
+
+COPY run_nginx.sh .
+RUN chmod +x run_nginx.sh

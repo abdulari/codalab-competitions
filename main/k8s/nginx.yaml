@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-deployment
+  template:
+    metadata:
+      labels:
+        app: nginx-deployment
+    spec:
+      containers:
+      - name: nginx-deployment
+        image: localhost:5000/django_codalab
+        command: ["/app/codalab/run_nginx.sh"]
+        ports:
+        - containerPort: 80
+        envFrom:
+          - configMapRef:
+              name: config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    name: nginx
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      name: server
+  selector:
+    app: nginx-deployment
+  type: ClusterIP

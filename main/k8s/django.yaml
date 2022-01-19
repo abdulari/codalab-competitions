@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-deployment
+  labels:
+    app: django-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: django-deployment
+  template:
+    metadata:
+      labels:
+        app: django-deployment
+    spec:
+      initContainers:
+        - name: wait-for-postgres
+          image: localhost:5000/busybox
+          command: ['sh', '-c', "until nc -z -w5 postgres 5432; do echo waiting for postgres service; sleep 2; done"]
+      containers:
+      - name: django-deployment
+        image: localhost:5000/django_codalab
+        command: ["/app/codalab/run_django.sh"]
+        ports:
+        - containerPort: 8000
+        envFrom:
+          - configMapRef:
+              name: config
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-service
+  labels:
+    name: django-service
+spec:
+  ports:
+    - port: 8000
+      protocol: TCP
+      name: django-server
+  selector:
+    app: django-deployment
+  type: ClusterIP

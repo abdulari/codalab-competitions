@@ -10,13 +10,13 @@ export DOLLAR='$'
 if [[ $SSL_CERTIFICATE ]]
 then
     echo "Using SSL certificate '${SSL_CERTIFICATE}' and allowing hosts '${SSL_ALLOWED_HOSTS}'"
-    envsubst < app/docker/nginx/ssl.conf > /etc/nginx/conf.d/default.conf
+    envsubst < /app/nginx/ssl.conf > /etc/nginx/conf.d/default.conf
 else
     echo "No SSL certificate env var (SSL_CERTIFICATE) found"
-    envsubst < app/docker/nginx/nginx.conf > /etc/nginx/conf.d/default.conf
+    envsubst < /app/nginx/nginx.conf > /etc/nginx/sites-available/default
 fi
 
 echo "nginx/default.conf:"
-echo | cat /etc/nginx/conf.d/default.conf
+echo | cat /etc/nginx/sites-available/default
 
 nginx -g "daemon off;"
